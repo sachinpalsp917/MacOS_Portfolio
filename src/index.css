@@ -236,8 +236,17 @@ body {
     }
   }
 
+  /* macOS-ish corner resize affordance — replaces the default browser triangle
+     with a slightly nicer diagonal grip in the bottom-right of resizable windows. */
+  #photos::-webkit-resizer {
+    background:
+      linear-gradient(135deg, transparent 0%, transparent 50%, #cbd5e1 50%, #cbd5e1 60%, transparent 60%, transparent 70%, #cbd5e1 70%, #cbd5e1 80%, transparent 80%);
+  }
+
   #photos {
-    @apply max-w-3xl absolute top-96 left-1/2 -translate-y-1/2 bg-white shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+    @apply w-[720px] h-[560px] min-w-[420px] min-h-[340px] max-w-[1400px] max-h-[900px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white shadow-2xl drop-shadow-2xl rounded-xl flex flex-col;
+    resize: both;
+    overflow: hidden;
 
     .sidebar {
       @apply w-3/12 flex-none bg-gray-50 border-r border-gray-200 flex flex-col p-5;
@@ -266,10 +275,13 @@ body {
     }
 
     .gallery {
-      @apply p-5;
+      @apply p-5 flex-1 min-h-0 overflow-y-auto overflow-x-hidden;
 
       ul {
-        @apply grid grid-cols-5 grid-rows-5 gap-2.5;
+        /* Default: ul fills gallery (h-full → 5 equal-fraction rows).
+           Floor: ul never shrinks below 440px — when the window is resized
+           shorter than that, the grid stays put and .gallery scrolls. */
+        @apply h-full min-h-[440px] grid grid-cols-5 grid-rows-5 gap-2.5;
 
         li {
           img {

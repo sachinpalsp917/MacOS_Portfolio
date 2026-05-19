@@ -12,21 +12,22 @@ const Contact = () => {
 
       <div className="p-5 space-y-5">
         <img
-          src="/images/adrian.jpg"
-          alt="Adrian"
+          src="/images/sachin.jpg"
+          alt="Sachin"
           className="w-20 rounded-full"
         />
 
-        <h3>Let's Connect</h3>
-        <p>Got an idea? A bug to squash? Or just wanna talk tech? I'm in.</p>
+        <h3>Let&rsquo;s Connect</h3>
+        <p>Got an idea? A bug to squash? Or just wanna talk tech? I&rsquo;m in.</p>
         <p>sachinpalsp917@gmail.com</p>
+        <p>+91 90231 54545</p>
 
         <ul>
           {socials.map(({ id, bg, link, icon, text }) => (
             <li key={id} style={{ backgroundColor: bg }}>
               <a
                 href={link}
-                target="_blank"
+                target={link.startsWith("mailto:") ? undefined : "_blank"}
                 rel="noopener noreferrer"
                 title={text}
               >

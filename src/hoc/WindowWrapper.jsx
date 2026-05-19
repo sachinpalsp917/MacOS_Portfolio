@@ -13,7 +13,10 @@ const WindowWrapper = (Component, windowKey) => {
     useGSAP(() => {
       const el = ref.current;
       if (!el || !isOpen) return;
-      el.style.display = "block";
+      // Clear inline display so the element's CSS class (flex / block / etc.)
+      // takes effect — hard-coding "block" here was overriding `display: flex`
+      // on windows that need a flex layout (e.g. #photos).
+      el.style.display = "";
       gsap.fromTo(
         el,
         { scale: 0.8, opacity: 0, y: 40 },
@@ -25,7 +28,15 @@ const WindowWrapper = (Component, windowKey) => {
       const el = ref.current;
       if (!el) return;
 
+      // Drag-to-move is bound to the window header only (like a real macOS
+      // titlebar). This keeps the body free for scrolling, clicks on content,
+      // and — critically — the bottom-right resize handle without conflict.
+      const header = el.querySelector("#window-header") ?? el;
+
       const [instance] = Draggable.create(el, {
+        trigger: header,
+        cursor: "grab",
+        activeCursor: "grabbing",
         onPress: () => focusWindow(windowKey),
       });
 
@@ -35,7 +46,8 @@ const WindowWrapper = (Component, windowKey) => {
     useLayoutEffect(() => {
       const el = ref.current;
       if (!el) return;
-      el.style.display = isOpen ? "block" : "none";
+      // Empty string lets the CSS class decide (block, flex, grid, …).
+      el.style.display = isOpen ? "" : "none";
     }, [isOpen]);
 
     return (
